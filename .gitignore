@@ -1,0 +1,6 @@
+# ClASS FILES
+*.class
+*.ctxt
+
+# MAC FILES
+.DS_Store
