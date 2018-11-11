@@ -1,26 +1,35 @@
 /**
  * A program to carry on conversations with a human user.
- * This is the initial version that:  
+ * This version: 
  * <ul><li>
- *       Uses indexOf to find strings
- * </li><li>
- *          Handles responding to simple words and phrases 
- * </li></ul>
- * This version uses a nested if to handle default responses.
+ *    Uses advanced search for keywords 
+ * </li></ul> 
+ *    
  * @author Laurie White
  * @version April 2012
  */
-public class Magpie2
+public class CodeTest
 {
     /**
-     * Get a default greeting   
+     * Get a default greeting
+     * 
      * @return a greeting
      */
     public String getGreeting()
     {
+
+        findKeyword("She's my sister", "sister", 0);
+        System.out.println("\n");
+        findKeyword("Brother Tom is helpful", "brother", 0);
+        System.out.println("\n");
+        findKeyword("I can't catch wild cats.", "cat", 0);
+        System.out.println("\n");
+        findKeyword("I know nothing about snow plows." ,"no", 0);
+        System.out.println("\n");
+
         return "Hello, let's talk.";
     }
-    
+
     /**
      * Gives a response to a user statement
      * 
@@ -31,43 +40,18 @@ public class Magpie2
     public String getResponse(String statement)
     {
         String response = "";
-        if (statement.trim().equals(""))
+        if (statement.length() == 0)
         {
-               response = "Say something, please.";
-        }
-        else if (findKeyword(statement, "tired") >= 0)
-        {
-           response = "What tired you out?";
-        }
-        else if (findKeyword(statement, "sad") >= 0)
-        {
-           response = "Are you okay?";
-        }
-        else if (findKeyword(statement, "happy") >= 0)
-        {
-           response = "That's great!";
+            response = "Say something, please.";
         }
         else if (findKeyword(statement, "no") >= 0)
         {
-           response = "Why so negative?";
-        }
-        else if (findKeyword(statement, "dog") >= 0 || findKeyword(statement, "cat") >= 0)
-        {
-            response = "Tell me more about your pets.";
-        }
-        else if (findKeyword(statement, "Mr.") >= 0)
-        {
-            response = "He sounds like a good teacher.";
-        }
-        else if (findKeyword(statement, "Ms.") >= 0
-                || findKeyword(statement, "Mrs.") >= 0)
-        {
-            response = "She sounds like a good teacher.";
+            response = "Why so negative?";
         }
         else if (findKeyword(statement, "mother") >= 0
-                || findKeyword(statement, "father") >= 0
-                || findKeyword(statement, "sister") >= 0
-                || findKeyword(statement, "brother") >= 0)
+        || findKeyword(statement, "father") >= 0
+        || findKeyword(statement, "sister") >= 0
+        || findKeyword(statement, "brother") >= 0)
         {
             response = "Tell me more about your family.";
         }
@@ -77,7 +61,23 @@ public class Magpie2
         }
         return response;
     }
-    
+
+    /**
+     * Search for one word in phrase. The search is not case
+     * sensitive. This method will check that the given goal
+     * is not a substring of a longer string (so, for
+     * example, "I know" does not contain "no").
+     * 
+     * @param statement
+     *            the string to search
+     * @param goal
+     *            the string to search for
+     * @param startPos
+     *            the character of the string to begin the
+     *            search at
+     * @return the index of the first occurrence of goal in
+     *         statement or -1 if it's not found
+     */
     private int findKeyword(String statement, String goal,
     int startPos)
     {
@@ -86,6 +86,8 @@ public class Magpie2
         // the line below
         int psn = phrase.toLowerCase().indexOf(
                 goal.toLowerCase(), startPos);
+        
+        int iter = 1;
 
         // Refinement--make sure the goal isn't part of a
         // word
@@ -94,13 +96,13 @@ public class Magpie2
             // Find the string of length 1 before and after
             // the word
             String before = " ", after = " ";
-            
+            System.out.println(iter + ", " + psn + ", " + before + ", " + after);
             if (psn > 0)
             {
                 before = phrase.substring(psn - 1, psn)
                 .toLowerCase();
             }
-            
+            System.out.println(iter + ", " + psn + ", " + before + ", " + after);
             if (psn + goal.length() < phrase.length())
             {
                 after = phrase.substring(
@@ -108,7 +110,7 @@ public class Magpie2
                     psn + goal.length() + 1)
                 .toLowerCase();
             }
-            
+            System.out.println(iter + ", " + psn + ", " + before + ", " + after);
             // If before and after aren't letters, we've
             // found the word
             if (((before.compareTo("a") < 0) || (before
@@ -119,11 +121,13 @@ public class Magpie2
             {
                 return psn;
             }
-            
+            System.out.println(iter + ", " + psn + ", " + before + ", " + after);
             // The last position didn't work, so let's find
             // the next, if there is one.
             psn = phrase.indexOf(goal.toLowerCase(),
                 psn + 1);
+            iter += 1;
+            System.out.println(iter + ", " + psn + ", " + before + ", " + after);
 
         }
 
@@ -148,18 +152,19 @@ public class Magpie2
     {
         return findKeyword(statement, goal, 0);
     }
-    
+
     /**
      * Pick a default response to use if nothing else fits.
+     * 
      * @return a non-committal string
      */
     private String getRandomResponse()
     {
-        final int NUMBER_OF_RESPONSES = 6;
+        final int NUMBER_OF_RESPONSES = 4;
         double r = Math.random();
-        int whichResponse = (int)(r * NUMBER_OF_RESPONSES);
+        int whichResponse = (int) (r * NUMBER_OF_RESPONSES);
         String response = "";
-        
+
         if (whichResponse == 0)
         {
             response = "Interesting, tell me more.";
@@ -176,14 +181,9 @@ public class Magpie2
         {
             response = "You don't say.";
         }
-        else if (whichResponse == 4)
-        {
-            response = "Of course.";
-        }
-        else if (whichResponse == 5)
-        {
-            response = "Got it.";
-        }
+
         return response;
     }
+
 }
+
